@@ -9,6 +9,7 @@ dotenv.config();
 const app = express();
 const server = http.createServer(app);
 const wss = new WebSocket.Server({ server });
+app.use(express.json());
 
 const redisClient = redis.createClient({
     host: process.env.REDIS_HOST,
@@ -18,7 +19,7 @@ const redisClient = redis.createClient({
 
 const mongoURI = 'mongodb+srv://assignment_user:HCgEj5zv8Hxwa4xO@test-cluster.6f94f5o.mongodb.net/';
 const dbName = 'assignment';
-const collectionName = 'assignment_saicharitha'; 
+const collectionName = 'assignment_saicharitha';
 
 // WebSocket server
 wss.on('connection', ws => {
@@ -50,8 +51,8 @@ wss.on('connection', ws => {
     });
 });
 
-// HTTP API endpoint for fetching tasks
-app.get('/fetchAllTasks', (req, res) => {
+// HTTP API endpoint for fetching notes
+app.get('/fetchAllNotes', (req, res) => {
     redisClient.get('FULLSTACK_TASK_saicharitha', (err, reply) => {
         if (err) {
             console.error(err);
@@ -62,6 +63,37 @@ app.get('/fetchAllTasks', (req, res) => {
         res.json(tasks);
     });
 });
+
+// Endpoint to add a note
+app.post('/addNote', (req, res) => {
+    try {
+        const { note } = req.body;
+        if (!note) {
+            return res.status(400).json({ error: 'Note is required' });
+        }
+
+        // Add the note to Redis
+        redisClient.get('FULLSTACK_TASK_saicharitha', (err, reply) => {
+            if (err) {
+                console.error(err);
+                return res.status(500).json({ error: 'Internal Server Error' });
+            }
+            let tasks = reply ? JSON.parse(reply) : [];
+            tasks.push(note);
+            const tasksStr = JSON.stringify(tasks);
+            redisClient.set('FULLSTACK_TASK_saicharitha', tasksStr);
+            if (tasks.length > 50) {
+                moveTasksToMongo(tasks);
+                redisClient.del('FULLSTACK_TASK_saicharitha');
+            }
+            return res.status(201).json({ message: 'Note added successfully' });
+        });
+    } catch (error) {
+        console.error('Error adding note:', error);
+        res.status(500).json({ error: 'Internal Server Error' });
+    }
+});
+
 
 // Function to move tasks to MongoDB
 async function moveTasksToMongo(tasks) {
