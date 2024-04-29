@@ -3,7 +3,10 @@
 .container {
   max-width: 600px;
   margin: 0 auto;
+  margin-top: 30px;;
   padding: 20px;
+  border: 2px solid #ccc;
+  border-radius: 10px;
 }
 
 .text-center {
@@ -14,6 +17,21 @@
   margin-bottom: 20px;
 }
 
+.add-note-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.note-input {
+  flex: 1; /* Take up remaining space */
+  margin-right: 10px; /* Adjust margin as needed */
+  padding: 10px;
+  margin-right: 10px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
 .note {
   background-color: #f0f0f0;
   border: 1px solid #ddd;
@@ -21,12 +39,10 @@
   margin-bottom: 10px;
 }
 
-.note-input {
-  width: calc(100% - 80px);
-  padding: 10px;
-  margin-right: 10px;
-  border: 1px solid #ccc;
-  border-radius: 4px;
+.note-divider {
+  border: none;
+  border-top: 1px solid #ccc; /* Adjust the color and style as needed */
+  margin: 3px 0; /* Adjust the margin as needed */
 }
 
 .add-note-btn {
@@ -41,3 +57,5 @@
 .add-note-btn:hover {
   background-color: #0056b3;
 }
+
+

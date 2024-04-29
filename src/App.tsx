@@ -42,14 +42,9 @@ function App(): JSX.Element {
 
   return (
     <div className="container">
-      <h1 className="text-2xl font-bold text-center mb-4">Note App</h1>
-      <div className="notes-container">
-        {notes.map((note, index) => (
-          <div key={index} className="note">
-            {note}
-          </div>
-        ))}
-      </div>
+      <h1 className="text-2xl font-bold text-center mb-4">
+        <span role="img" aria-label="note icon">📝</span> Note App
+      </h1>
       <div className="add-note-container">
         <input
           type="text"
@@ -62,6 +57,17 @@ function App(): JSX.Element {
           Add Note
         </button>
       </div>
+      <div className="notes-container">
+        <h1 className="text-xl text-left mb-4">Notes</h1>
+        <hr className="note-divider" /> 
+        {notes.map((note, index) => (
+          <div key={index} className="note">
+            {note}
+            <hr className="note-divider" /> {/* Add a horizontal line */}
+          </div>
+        ))}
+      </div>
+
     </div>
   );
 }
